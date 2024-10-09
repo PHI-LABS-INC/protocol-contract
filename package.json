@@ -1,10 +1,10 @@
 {
-  "name": "@ZaK3939/phi-protocol",
+  "name": "phi-protocol",
   "description": "",
   "version": "1.0.0",
   "author": {
     "name": "ZaK3939",
-    "url": "https://github.com/ZaK3939"
+    "url": "https://github.com/PHI-LABS-INC/protocol-contract"
   },
   "dependencies": {
     "@defi-wonderland/natspec-smells": "^1.0.3",
