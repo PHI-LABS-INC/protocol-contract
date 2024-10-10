@@ -21,7 +21,7 @@ abstract contract RewardControl is IRewards, EIP712 {
 
     /// @dev The EIP-712 typehash for gasless withdraws
     bytes32 public constant WITHDRAW_TYPEHASH =
-        keccak256("Withdraw(address from,address to,uint256 amount,uint256 nonce,uint256 deadline)");
+        keccak256("Withdraw(address from,address to,uint256 amount,uint256 nonce,uint256 expiresIn,uint256 chainId)");
 
     /// @dev An account's nonce for gasless withdraws
     mapping(address account => uint256 nonce) public nonces;
@@ -93,9 +93,17 @@ abstract contract RewardControl is IRewards, EIP712 {
         _withdraw(from, from, amount);
     }
 
-    function withdrawWithSig(address from, address to, uint256 amount, uint256 deadline, bytes calldata sig) external {
-        if (block.timestamp > deadline) revert DeadlineExpired();
-        if (!_verifySignature(from, to, amount, nonces[from], deadline, block.chainid, sig)) revert InvalidSignature();
+    function withdrawWithSig(
+        address from,
+        address to,
+        uint256 amount,
+        uint256 expiresIn,
+        bytes calldata sig
+    )
+        external
+    {
+        if (block.timestamp > expiresIn) revert DeadlineExpired();
+        if (!_verifySignature(from, to, amount, nonces[from], expiresIn, block.chainid, sig)) revert InvalidSignature();
 
         unchecked {
             ++nonces[from];
@@ -144,7 +152,7 @@ abstract contract RewardControl is IRewards, EIP712 {
         address to,
         uint256 amount,
         uint256 nonce,
-        uint256 deadline,
+        uint256 expiresIn,
         uint256 chainId,
         bytes calldata sig
     )
@@ -152,8 +160,9 @@ abstract contract RewardControl is IRewards, EIP712 {
         view
         returns (bool)
     {
-        bytes32 structHash = keccak256(abi.encode(WITHDRAW_TYPEHASH, from, to, amount, nonce, deadline, chainId));
+        bytes32 structHash = keccak256(abi.encode(WITHDRAW_TYPEHASH, from, to, amount, nonce, expiresIn, chainId));
         bytes32 digest = _hashTypedData(structHash);
+        // address signer, bytes32 hash, bytes calldata signature
         return SignatureCheckerLib.isValidSignatureNowCalldata(from, digest, sig);
     }
 

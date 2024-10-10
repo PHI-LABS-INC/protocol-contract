@@ -115,11 +115,11 @@ contract TestRewardControl is Settings {
         uint256 beforeartCreatorBalance = artCreator.balance;
         uint256 beforeTotalSupply = phiRewards.totalSupply();
 
-        bytes memory sig =
-            _signMint(artCreatorPrivateKey, artCreator, artCreator, artCreatorRewardsBalance, nonce, deadline);
-        phiRewards.withdrawWithSig(artCreator, artCreator, artCreatorRewardsBalance, deadline, sig);
+        bytes memory sig = _signMint(artCreatorPrivateKey, artCreator, user1, artCreatorRewardsBalance, nonce, deadline);
+        phiRewards.withdrawWithSig(artCreator, user1, artCreatorRewardsBalance, deadline, sig);
 
-        assertEq(artCreator.balance, beforeartCreatorBalance + artCreatorRewardsBalance);
+        assertEq(artCreator.balance, beforeartCreatorBalance);
+        assertEq(user1.balance, artCreatorRewardsBalance);
         assertEq(phiRewards.totalSupply(), beforeTotalSupply - artCreatorRewardsBalance);
     }
 
@@ -132,6 +132,7 @@ contract TestRewardControl is Settings {
         uint256 deadline
     )
         public
+        view
         returns (bytes memory signature)
     {
         bytes32 digest = phiRewards.hashTypedData(
