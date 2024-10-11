@@ -78,6 +78,8 @@ forge script script/Deploy.s.sol:Deploy --rpc-url bera_testnet --broadcast --ver
 
 forge script script/UpgradeFactory.s.sol:UpgradeFactory --rpc-url base_sepolia --broadcast --verify --legacy --ffi
 
+forge script script/UpgradeCred.s.sol:UpgradeCred --rpc-url base_sepolia --broadcast --verify --legacy --ffi
+
 ### Format
 
 Format the contracts:
