@@ -256,6 +256,7 @@ contract Cred is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, Pausab
 
         if (data.expiresIn < block.timestamp) revert SignatureExpired();
         if (data.executor != _msgSender()) revert UnauthorizedCaller();
+        if (data.credCreator == address(0)) revert InvalidAddressZero();
         if (data.chainId != block.chainid) revert InvalidChainId();
         if (data.nonce != nonces[_msgSender()]) revert InvalidNonce();
         if (!curatePriceWhitelist[data.bondingCurve]) revert UnauthorizedCurve();
