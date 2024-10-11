@@ -187,7 +187,6 @@ contract CredV2 is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, Paus
     //////////////////////////////////////////////////////////////*/
     /// @notice Creates a new cred.
     function createCred(
-        address creator_,
         bytes calldata signedData_,
         bytes calldata signature_,
         uint16 buyShareRoyalty_,

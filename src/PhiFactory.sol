@@ -204,6 +204,7 @@ contract PhiFactory is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, 
         // uint256 signedChainId;
         // uint256 nonce;
         // address executor;
+        // address artist;
         // string uri;
         // bytes credData;
 
@@ -212,8 +213,9 @@ contract PhiFactory is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, 
         if (createSigData.executor != _msgSender()) revert InvalidExecutor();
         if (createSigData.nonce != nonces[_msgSender()]) revert InvalidNonce();
 
-        ERC1155Data memory erc1155Data =
-            _createERC1155Data(artIdCounter, createConfig_, createSigData.uri, createSigData.credData);
+        ERC1155Data memory erc1155Data = _createERC1155Data(
+            artIdCounter, createConfig_, createSigData.artist, createSigData.uri, createSigData.credData
+        );
         _validateArtCreation(erc1155Data);
 
         address artAddress = createERC1155Internal(artIdCounter, erc1155Data);
@@ -634,6 +636,7 @@ contract PhiFactory is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, 
         PhiArt storage currentArt = arts[newArtId];
         _initializePhiArt(currentArt, createData_);
 
+        // Decode the credData into the credId, credCreator, verificationType, credChainId, and merkleRootHash
         (uint256 credId,, string memory verificationType, uint256 credChainId,) =
             abi.decode(createData_.credData, (uint256, address, string, uint256, bytes32));
 
@@ -754,6 +757,7 @@ contract PhiFactory is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, 
     function _createERC1155Data(
         uint256 newArtId_,
         CreateConfig memory createConfig_,
+        address artist_,
         string memory uri_,
         bytes memory credData
     )
@@ -762,7 +766,7 @@ contract PhiFactory is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, 
         returns (ERC1155Data memory)
     {
         return ERC1155Data({
-            artist: createConfig_.artist,
+            artist: artist_,
             receiver: createConfig_.receiver,
             artChainId: block.chainid,
             maxSupply: createConfig_.maxSupply,

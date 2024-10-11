@@ -40,7 +40,6 @@ interface IPhiFactory {
                                  STRUCTS
     //////////////////////////////////////////////////////////////*/
     struct CreateConfig {
-        address artist;
         address receiver;
         uint256 endTime;
         uint256 startTime;
@@ -98,6 +97,7 @@ interface IPhiFactory {
         uint256 signedChainId;
         uint256 nonce;
         address executor;
+        address artist;
         string uri;
         bytes credData;
     }

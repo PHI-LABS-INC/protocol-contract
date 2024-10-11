@@ -229,7 +229,6 @@ contract Cred is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, Pausab
     //////////////////////////////////////////////////////////////*/
     /// @notice Creates a new cred.
     function createCred(
-        address creator_,
         bytes calldata signedData_,
         bytes calldata signature_,
         uint16 buyShareRoyalty_,
@@ -241,12 +240,13 @@ contract Cred is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, Pausab
         whenNotPaused
     {
         if (_recoverSigner(keccak256(signedData_), signature_) != phiSignerAddress) revert AddressNotSigned();
-        if (creator_ == address(0)) revert InvalidAddressZero();
+
         CreateCredData memory data = abi.decode(signedData_, (CreateCredData));
         // CreateCredData contains:
         // data.expiresIn      - Timestamp when the signature expires
         // data.nonce          - Nonce to prevent replay attacks
-        // data.executor        - Address of the executor (should match msg.sender)
+        // data.executor       - Address of the executor (should match msg.sender)
+        // data.credCreator    - Address of the creator
         // data.chainId        - ID of the chain where this should be executed
         // data.bondingCurve   - Address of the bonding curve contract
         // data.credURL        - URL associated with the cred
@@ -276,7 +276,7 @@ contract Cred is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, Pausab
         }
 
         uint256 credId = _createCredInternal(
-            creator_,
+            data.credCreator,
             data.credURL,
             data.credType,
             data.verificationType,

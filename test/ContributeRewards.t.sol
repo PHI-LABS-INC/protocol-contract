@@ -36,6 +36,7 @@ contract ContributeRewardsTest is Settings {
             expiresIn: block.timestamp + 1 hours,
             nonce: nonce,
             executor: participant,
+            credCreator: participant,
             chainId: block.chainid,
             bondingCurve: address(bondingCurve),
             credURL: credURL,
@@ -51,7 +52,7 @@ contract ContributeRewardsTest is Settings {
         bytes memory signature =
             cv == 27 ? abi.encodePacked(cr, cs) : abi.encodePacked(cr, cs | bytes32(uint256(1) << 255));
 
-        cred.createCred{ value: buyPrice }(participant, signCreateData, signature, 100, 100, 1);
+        cred.createCred{ value: buyPrice }(signCreateData, signature, 100, 100, 1);
 
         vm.stopPrank();
     }

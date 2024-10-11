@@ -120,6 +120,7 @@ interface ICred {
         uint256 expiresIn;
         uint256 nonce;
         address executor;
+        address credCreator;
         uint256 chainId;
         address bondingCurve;
         string credURL;
@@ -185,8 +186,9 @@ interface ICred {
     /// @param curator The address to check.
     /// @return The number of share the address has for the cred.
     function getShareNumber(uint256 credId, address curator) external view returns (uint256);
+
+    /// @notice create a new cred.
     function createCred(
-        address creator,
         bytes calldata signedData,
         bytes calldata signature,
         uint16 buyShareRoyalty,
