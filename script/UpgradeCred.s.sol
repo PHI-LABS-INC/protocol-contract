@@ -20,7 +20,7 @@ contract UpgradeCred is BaseScript {
 
     function upgradeCred(address proxyAddress, address newCred) public returns (address) {
         Cred credProxy = Cred(payable(proxyAddress));
-        credProxy.upgradeToAndCall(address(newCred), abi.encodeWithSelector(Cred.initializeV2.selector));
+        // credProxy.upgradeToAndCall(address(newCred), abi.encodeWithSelector(Cred.initializeV2.selector));
         return address(credProxy);
     }
 }
