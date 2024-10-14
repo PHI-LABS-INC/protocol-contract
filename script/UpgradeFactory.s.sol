@@ -18,7 +18,7 @@ contract UpgradeFactory is BaseScript {
         // address mostRecentlyDeployedProxy = DevOpsTools.get_most_recent_deployment("PhiFactory", block.chainid);
         vm.startBroadcast();
         PhiFactory newFactory = new PhiFactory();
-        address currentPhiFactoryProxy = address(0x3DcB7B219fB5AeCF01C9bBC54984f4106B84e5b8);
+        address currentPhiFactoryProxy = address(0x6a752405Abd3F7Ec88001F141E0A0FcFbb068502);
         address proxy = upgradeFactory(currentPhiFactoryProxy, address(newFactory));
         console2.log("Upgraded PhiFactory to address: %s", proxy);
         vm.stopBroadcast();
@@ -27,7 +27,7 @@ contract UpgradeFactory is BaseScript {
 
     function upgradeFactory(address oldfactoryProxyAddress, address newFactory) public returns (address) {
         PhiFactory factoryProxy = PhiFactory(payable(oldfactoryProxyAddress));
-        // factoryProxy.upgradeToAndCall(address(newFactory), abi.encodeWithSelector(PhiFactory.initializeV2.selector));
+        factoryProxy.upgradeToAndCall(address(newFactory), abi.encodeWithSelector(PhiFactory.initializeV2.selector));
         return address(factoryProxy);
     }
 }

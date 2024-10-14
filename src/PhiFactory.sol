@@ -63,8 +63,12 @@ contract PhiFactory is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, 
         _disableInitializers();
     }
 
+    function initializeV2() external reinitializer(2) {
+        // V2 specific initializations
+    }
+
     function version() public pure returns (uint256) {
-        return 1;
+        return 2;
     }
 
     function contractURI(address nftAddress) public view returns (string memory) {
@@ -75,16 +79,19 @@ contract PhiFactory is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, 
             abi.encodePacked(
                 "{",
                 '"name":"',
-                "PHI NFT",
+                "Phi",
                 '",',
                 '"description":"',
                 _buildDescription(art),
                 '",',
                 '"image":"',
-                "https://gateway.irys.xyz/H2OgtiAtsJRB8svr4d-kV2BtAE4BTI_q0wtAn5aKjcU",
+                "https://arweave.net/_oxKSZMtvAuGrRiNxVRYzpkzUSPsGQ7RJilQ7MYnZ70",
+                '",',
+                '"banner_image":"',
+                "https://arweave.net/qHojDzf6FvtjI7OV8eyjm1oXzm17klsrSJpUzbV5pNA",
                 '",',
                 '"featured_image":"',
-                "https://www.arweave.net/47AloaAgG7UFYuZjieYi4b2QOD1TG2pFYAbsshULtEY?ext=png",
+                "https://arweave.net/O1rPnGN7U3MDjYUHjzthEIyp0INLNYuY5RQRCZpELtc",
                 '",',
                 '"external_link":"https://phi.box/",',
                 '"collaborators":["',
@@ -847,19 +854,16 @@ contract PhiFactory is Initializable, UUPSUpgradeable, Ownable2StepUpgradeable, 
     function _buildDescription(PhiArt memory art) internal pure returns (string memory) {
         return string(
             abi.encodePacked(
-                "Phi Cred NFT for credId ",
+                "Phi Protocol is an open credential layer for onchain identity. ",
+                "Phi NFT collections represent your onchain achievement. ",
+                "Details about this collection: cred-id: ",
                 uint256(art.credId).toString(),
-                " on chain ",
+                ", chain-id: ",
                 uint256(art.credChainId).toString(),
-                ". ",
-                "This NFT represents a unique on-chain-action created by ",
+                ", created by: ",
                 art.credCreator.toHexString(),
                 ". ",
-                "The cred is verified using ",
-                art.verificationType,
-                ". ",
-                "Holders of this NFT have proven their eligibility for the cred. ",
-                "Join the Phi community to collect and showcase your on-chain achievements."
+                "Explore https://phi.box/ to learn more."
             )
         );
     }
