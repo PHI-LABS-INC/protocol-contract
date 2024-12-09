@@ -70,4 +70,4 @@
   bera_testnet = "https://bartio.rpc.berachain.com/"
   zora_sepolia = "${ZORA_SEPOLIA_RPC}"
   cyber_testnet = "https://cyber-testnet.alt.technology/"
-  cyber = "https://cyber.alt.technology/"
+  cyber = "https://rpc.cyber.co"

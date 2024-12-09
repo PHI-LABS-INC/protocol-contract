@@ -41,7 +41,6 @@ contract Deploy is BaseScript {
     function run() public broadcast {
         console2.log("Chain Info: %s", block.chainid);
         if (block.chainid == 8453) {
-            signer = 0xe35E5f8B912C25cDb6B00B347cb856467e4112A3;
             treasury = 0xcDc56A5187AeB05bf713055D46FbA616471b1812;
         } else {
             treasury = deployer;

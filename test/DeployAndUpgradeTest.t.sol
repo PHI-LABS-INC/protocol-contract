@@ -17,7 +17,7 @@ contract DeployAndUpgradeTest is StdCheats, Settings {
     }
 
     function testPhiFactory() public {
-        uint256 expectedValue = 1;
+        uint256 expectedValue = 2;
         assertEq(expectedValue, phiFactory.version());
     }
 

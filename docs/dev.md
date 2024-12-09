@@ -76,9 +76,19 @@ forge script script/DeployWoCred.s.sol:Deploy --rpc-url zora_sepolia --broadcast
 forge script script/Deploy.s.sol:Deploy --rpc-url bera_testnet --broadcast --verifier-url
 'https://api.routescan.io/v2/network/testnet/evm/80084/etherscan' --etherscan-api-key "verifyContract"
 
+forge script script/Deploy.s.sol:Deploy --rpc-url https://bartio.rpc.berachain.com/ --broadcast --verifier-url
+'https://api.routescan.io/v2/network/testnet/evm/80084/etherscan' --watch --etherscan-api-key "verifyContract"
+
+forge script script/Deploy.s.sol:Deploy --broadcast --rpc-url https://bartio.rpc.berachain.com/ --verifier-url
+'https://api.routescan.io/v2/network/testnet/evm/80084/etherscan/api/' --etherscan-api-key "verifyContract" --verify
+--watch
+
 forge script script/UpgradeFactory.s.sol:UpgradeFactory --rpc-url base_sepolia --broadcast --verify --legacy --ffi
 
 forge script script/UpgradeCred.s.sol:UpgradeCred --rpc-url base_sepolia --broadcast --verify --legacy --ffi
+
+forge script script/Deploy.s.sol:Deploy --rpc-url cyber --broadcast --verify --legacy --ffi --verifier blockscout
+--verifier-url https://api.socialscan.io/cyber/v1/explorer/command_api/contract --chain-id 7560
 
 ### Format
 
