@@ -7,6 +7,7 @@ import { Test } from "forge-std/Test.sol";
 import { TestUtils } from "./TestUtils.sol";
 import { CuratorRewardsDistributor } from "../../src/reward/CuratorRewardsDistributor.sol";
 import { PhiFactory } from "../../src/PhiFactory.sol";
+import { PhiFactoryZkSync } from "../../src/PhiFactoryZkSync.sol";
 import { PhiRewards } from "../../src/reward/PhiRewards.sol";
 import { BondingCurve } from "../../src/curve/BondingCurve.sol";
 import { ContributeRewards } from "../../src/lib/ContributeRewards.sol";
@@ -91,7 +92,8 @@ contract Settings is Test, TestUtils {
 
     uint256 internal constant ETH_SUPPLY = 120_200_000 ether;
 
-    PhiFactory phiFactory;
+    // PhiFactory phiFactory;
+    PhiFactoryZkSync phiFactory;
     PhiRewards phiRewards;
 
     BondingCurve bondingCurve;
@@ -132,9 +134,12 @@ contract Settings is Test, TestUtils {
         vm.deal(verifier, 1 ether);
 
         vm.startPrank(owner);
+        // address payable phiFactoryAddress =
+        //     payable(address(new PhiFactory()).cloneDeterministic(keccak256(abi.encodePacked(msg.sender, "SALT"))));
+        // phiFactory = PhiFactory(phiFactoryAddress);
         address payable phiFactoryAddress =
-            payable(address(new PhiFactory()).cloneDeterministic(keccak256(abi.encodePacked(msg.sender, "SALT"))));
-        phiFactory = PhiFactory(phiFactoryAddress);
+            payable(address(new PhiFactoryZkSync()).cloneDeterministic(keccak256(abi.encodePacked(msg.sender, "SALT"))));
+        phiFactory = PhiFactoryZkSync(phiFactoryAddress);
 
         // claimSignerPrivateKey = uint256(vm.envUint("TEST_CLAIM_SIGNER_PRIVATE_KEY"));
         claimSignerPrivateKey = 0x4af1bceebf7f3634ec3cff8a2c38e51178d5d4ce585c52d6043e5e2cc3418bb0;
