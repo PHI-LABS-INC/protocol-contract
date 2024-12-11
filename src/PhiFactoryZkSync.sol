@@ -19,7 +19,9 @@ import { SafeTransferLib } from "solady/utils/SafeTransferLib.sol";
 import { LibZip } from "solady/utils/LibZip.sol";
 import { MerkleProofLib } from "solady/utils/MerkleProofLib.sol";
 
+import "@openzeppelin/contracts/utils/Create2.sol";
 /// @title PhiFactoryZkSync
+
 contract PhiFactoryZkSync is
     Initializable,
     UUPSUpgradeable,
@@ -715,12 +717,6 @@ contract PhiFactoryZkSync is
         address implementation;
     }
 
-    function deployProxy(address implementation, bytes calldata constructorInput) external returns (address proxy) {
-        // zkSyncのシステムコントラクトを使用
-        bytes32 salt = bytes32(uint256(uint160(implementation)) + block.timestamp);
-        proxy = SystemContractsCaller.create2Clone(implementation, salt, constructorInput);
-    }
-
     function _createNewNFTContract(
         PhiArt storage art,
         uint256 newArtId,
@@ -732,9 +728,14 @@ contract PhiFactoryZkSync is
         private
         returns (address)
     {
-        bytes memory constructorInput = abi.encode(credChainId, credId, verificationType);
+        // Implementation of minimal proxy contract
+        bytes memory bytecode = abi.encodePacked(
+            hex"3d602d80600a3d3981f3363d3d373d3d3d363d73",
+            address(erc1155ArtAddress),
+            hex"5af43d82803e903d91602b57fd5bf3"
+        );
 
-        address artAddress = deployProxy(erc1155ArtAddress, constructorInput);
+        address newArt = Create2.deploy(0, keccak256(abi.encodePacked(block.chainid, newArtId, credId)), bytecode);
         art.artAddress = payable(newArt);
 
         IPhiNFT1155Ownable(newArt).initialize(credChainId, credId, verificationType);
@@ -750,11 +751,6 @@ contract PhiFactoryZkSync is
         emit NewArtCreated(createData_.artist, credId, credChainId, newArtId, createData_.uri, address(newArt), tokenId);
 
         return address(newArt);
-    }
-
-    function deployProxy(address implementation, bytes calldata constructorInput) external returns (address proxy) {
-        bytes32 salt = bytes32(uint256(uint160(implementation)) + block.timestamp);
-        proxy = SystemContractsCaller.create2Clone(implementation, salt, constructorInput);
     }
 
     function _useExistingNFTContract(
