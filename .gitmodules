@@ -16,3 +16,6 @@
 [submodule "lib/zksync"]
 	path = lib/zksync
 	url = https://github.com/matter-labs/zksync
+[submodule "lib/era-contracts"]
+	path = lib/era-contracts
+	url = https://github.com/matter-labs/era-contracts
