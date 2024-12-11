@@ -9,7 +9,6 @@ import { ICred } from "../src/interfaces/ICred.sol";
 import { IERC1155 } from "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import { IPhiFactory } from "../src/interfaces/IPhiFactory.sol";
 
-import { PhiFactory } from "../src/PhiFactory.sol";
 import { PhiRewards } from "../src/reward/PhiRewards.sol";
 import { LibString } from "solady/utils/LibString.sol";
 import { ECDSA } from "solady/utils/ECDSA.sol";

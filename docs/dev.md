@@ -90,6 +90,9 @@ forge script script/UpgradeCred.s.sol:UpgradeCred --rpc-url base_sepolia --broad
 forge script script/Deploy.s.sol:Deploy --rpc-url cyber --broadcast --verify --legacy --ffi --verifier blockscout
 --verifier-url https://api.socialscan.io/cyber/v1/explorer/command_api/contract --chain-id 7560
 
+forge script script/DeployForZerion.s.sol:Deploy --broadcast --rpc-url https://rpc.zerion.io/v1/zero --chain-id 543210
+--legacy --ffi --zksync
+
 ### Format
 
 Format the contracts:

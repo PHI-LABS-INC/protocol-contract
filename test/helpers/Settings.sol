@@ -6,7 +6,7 @@ import { PRBTest } from "@prb/test/src/PRBTest.sol";
 import { Test } from "forge-std/Test.sol";
 import { TestUtils } from "./TestUtils.sol";
 import { CuratorRewardsDistributor } from "../../src/reward/CuratorRewardsDistributor.sol";
-import { PhiFactory } from "../../src/PhiFactory.sol";
+// import { PhiFactory } from "../../src/PhiFactory.sol";
 import { PhiFactoryZkSync } from "../../src/PhiFactoryZkSync.sol";
 import { PhiRewards } from "../../src/reward/PhiRewards.sol";
 import { BondingCurve } from "../../src/curve/BondingCurve.sol";
