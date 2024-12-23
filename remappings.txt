@@ -4,3 +4,4 @@ solady/=lib/solady/src/
 foundry-devops/=lib/foundry-devops/src/
 @openzeppelin/contracts/=lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/
 @openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/
+era-contracts/=lib/era-contracts/
