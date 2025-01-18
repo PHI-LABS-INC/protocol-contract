@@ -18,6 +18,8 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
     address public trustedSigner;
     mapping(address => uint256) public nonces;
 
+    uint256[50] private __gap;
+
     function initialize(address _eas, address _treasury, address _trustedSigner, address _owner) external initializer {
         if (_eas == address(0) || _treasury == address(0) || _trustedSigner == address(0) || _owner == address(0)) {
             revert NullAddress();
@@ -61,7 +63,8 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
                 req.schemaId,
                 req.category,
                 req.uri,
-                req.attestationExpirationTime
+                req.attestationExpirationTime,
+                block.chainid
             )
         );
 
@@ -82,21 +85,25 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
                 expirationTime: req.attestationExpirationTime,
                 revocable: true,
                 refUID: 0,
-                data: data
+                data: data,
+                value: 0
             })
         });
         bytes32 uid = eas.attest(ar);
         emit BoardAttested(msg.sender, uid, req.schemaId, req.category, req.uri, req.attestationExpirationTime);
     }
 
-    function _safeRecover(bytes32 h, bytes calldata sig) internal view returns (address) {
-        (bool ok, bytes memory res) =
-            address(this).staticcall(abi.encodeWithSelector(this._recoverPublic.selector, h, sig));
-        if (!ok) revert InvalidSigner();
-        return abi.decode(res, (address));
+    function revokeAttestation(bytes32 attestationUID) external onlyOwner {
+        eas.revoke(
+            IEAS.RevocationRequest({
+                schema: bytes32(0), // Use the appropriate schema ID
+                uid: attestationUID
+            })
+        );
+        emit AttestationRevoked(attestationUID);
     }
 
-    function _recoverPublic(bytes32 h, bytes calldata sig) public view returns (address) {
+    function _safeRecover(bytes32 h, bytes calldata sig) internal view returns (address) {
         bytes32 d = ECDSA.toEthSignedMessageHash(h);
         return ECDSA.recover(d, sig);
     }

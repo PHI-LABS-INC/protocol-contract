@@ -36,6 +36,8 @@ interface IPhiAttester {
         uint64 attestationExpirationTime
     );
 
+    event AttestationRevoked(bytes32 indexed attestationUID);
+
     /*//////////////////////////////////////////////////////////////
                                  FUNCTIONS
     //////////////////////////////////////////////////////////////*/
