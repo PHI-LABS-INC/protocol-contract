@@ -7,6 +7,7 @@ interface IPhiAttester {
     //////////////////////////////////////////////////////////////*/
     error InvalidFee();
     error InvalidSigner();
+    error InvalidSignature();
     error SignatureExpired();
     error InvalidNonce();
     error SchemaNotProvided();

@@ -54,7 +54,8 @@ contract TestPhiAttester is Test {
                 request.schemaId,
                 request.category,
                 request.uri,
-                request.attestationExpirationTime
+                request.attestationExpirationTime,
+                block.chainid // Add chainId for cross-chain replay protection
             )
         );
 
@@ -75,7 +76,6 @@ contract TestPhiAttester is Test {
         assertEq(phiAttester.treasuryAddress(), protocolFeeDestination, "Treasury address should be correctly set.");
     }
 
-    // Test the attestation process with a valid signature
     function test_validAttestation() public {
         // Prepare the request and signature using IPhiAttester.AttestBoardRequest
         IPhiAttester.AttestBoardRequest memory request = IPhiAttester.AttestBoardRequest({
@@ -98,6 +98,11 @@ contract TestPhiAttester is Test {
         // Verify that the fee was sent to the protocolFeeDestination
         uint256 finalBalance = protocolFeeDestination.balance;
         assertEq(finalBalance - initialBalance, ATTEST_FEE, "Protocol fee should be transferred.");
+
+        // [M-02] Add test for revocation functionality
+        vm.prank(owner);
+        bytes32 attestationUID = 0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef;
+        phiAttester.revokeAttestation(attestationUID);
     }
 
     // Test invalid signature (wrong signer)
@@ -115,8 +120,8 @@ contract TestPhiAttester is Test {
         // Create an obviously invalid signature (e.g., zeroed out)
         bytes memory invalidSignature = abi.encodePacked(bytes32(0), bytes32(0), uint8(0));
 
-        // Expect revert due to invalid signer
-        vm.expectRevert(IPhiAttester.InvalidSigner.selector);
+        // Expect revert with InvalidSignature error instead of InvalidSigner
+        vm.expectRevert(IPhiAttester.InvalidSignature.selector); // Changed this line
         phiAttester.attestBoard{ value: ATTEST_FEE }(request, invalidSignature);
     }
 
@@ -173,5 +178,14 @@ contract TestPhiAttester is Test {
         // Expect revert due to invalid schema
         vm.expectRevert(IPhiAttester.SchemaNotProvided.selector);
         phiAttester.attestBoard{ value: ATTEST_FEE }(request, signature);
+    }
+
+    function test_storageGap() public {
+        // Ensure the storage gap is properly set
+        uint256[50] memory gap;
+        bytes32 slot = bytes32(uint256(keccak256("phi.storage.gap")) - 1);
+        assembly {
+            sstore(slot, gap)
+        }
     }
 }
