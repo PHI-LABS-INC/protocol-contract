@@ -98,11 +98,6 @@ contract TestPhiAttester is Test {
         // Verify that the fee was sent to the protocolFeeDestination
         uint256 finalBalance = protocolFeeDestination.balance;
         assertEq(finalBalance - initialBalance, ATTEST_FEE, "Protocol fee should be transferred.");
-
-        // [M-02] Add test for revocation functionality
-        vm.prank(owner);
-        bytes32 attestationUID = 0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef;
-        phiAttester.revokeAttestation(attestationUID);
     }
 
     // Test invalid signature (wrong signer)
@@ -120,7 +115,7 @@ contract TestPhiAttester is Test {
         // Create an obviously invalid signature (e.g., zeroed out)
         bytes memory invalidSignature = abi.encodePacked(bytes32(0), bytes32(0), uint8(0));
 
-        // Expect revert with InvalidSignature error instead of InvalidSigner
+        // Expect revert with InvalidSignature error instead of InvalidSignature
         vm.expectRevert(IPhiAttester.InvalidSignature.selector); // Changed this line
         phiAttester.attestBoard{ value: ATTEST_FEE }(request, invalidSignature);
     }
@@ -178,6 +173,27 @@ contract TestPhiAttester is Test {
         // Expect revert due to invalid schema
         vm.expectRevert(IPhiAttester.SchemaNotProvided.selector);
         phiAttester.attestBoard{ value: ATTEST_FEE }(request, signature);
+    }
+
+    function test_validRevocation() public {
+        // First create an attestation
+        IPhiAttester.AttestBoardRequest memory request = IPhiAttester.AttestBoardRequest({
+            expiresAt: block.timestamp + 1000,
+            nonce: 0,
+            schemaId: bytes32("1"), // このスキーマIDを使用
+            category: "art",
+            uri: "ipfs://exampleuri",
+            attestationExpirationTime: uint64(block.timestamp + 10_000)
+        });
+        bytes memory signature = getSignature(request);
+        phiAttester.attestBoard{ value: ATTEST_FEE }(request, signature);
+
+        // Then test revocation
+        vm.startPrank(owner);
+        bytes32 attestationUID = mockEAS.getLatestAttestationUID();
+        // schemaIdも引数として渡す
+        phiAttester.revokeAttestation(request.schemaId, attestationUID);
+        vm.stopPrank();
     }
 
     function test_storageGap() public {

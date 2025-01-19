@@ -93,13 +93,13 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
         emit BoardAttested(msg.sender, uid, req.schemaId, req.category, req.uri, req.attestationExpirationTime);
     }
 
-    function revokeAttestation(bytes32 attestationUID) external onlyOwner {
-        eas.revoke(
-            IEAS.RevocationRequest({
-                schema: bytes32(0), // Use the appropriate schema ID
-                uid: attestationUID
-            })
-        );
+    function revokeAttestation(bytes32 schemaId, bytes32 attestationUID) external onlyOwner {
+        IEAS.RevocationRequest memory request = IEAS.RevocationRequest({
+            schema: schemaId,
+            data: IEAS.RevocationRequestData({ uid: attestationUID, value: 0 })
+        });
+
+        eas.revoke(request);
         emit AttestationRevoked(attestationUID);
     }
 

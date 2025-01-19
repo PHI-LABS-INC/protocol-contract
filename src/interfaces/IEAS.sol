@@ -16,14 +16,18 @@ interface IEAS {
         AttestationRequestData data;
     }
 
-    // Add RevocationRequest struct
+    struct RevocationRequestData {
+        bytes32 uid; // The UID of the attestation to revoke.
+        uint256 value; // An explicit ETH amount to send to the resolver. This is important to prevent accidental user
+            // errors.
+    }
+
+    /// @notice A struct representing the full arguments of the revocation request.
     struct RevocationRequest {
-        bytes32 schema;
-        bytes32 uid;
+        bytes32 schema; // The unique identifier of the schema.
+        RevocationRequestData data; // The arguments of the revocation request.
     }
 
     function attest(AttestationRequest calldata request) external payable returns (bytes32);
-
-    // Add revoke function
     function revoke(RevocationRequest calldata request) external payable;
 }
