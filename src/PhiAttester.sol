@@ -91,7 +91,7 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
             })
         });
         bytes32 uid = eas.attest(ar);
-        emit BoardAttested(msg.sender, uid, req.schemaId, req.category, req.uri, req.attestationExpirationTime);
+        emit BoardAttested(msg.sender, uid, req.schemaId, req.boardId, req.uri, req.attestationExpirationTime);
     }
 
     function revokeAttestation(bytes32 schemaId, bytes32 attestationUID) external onlyOwner {

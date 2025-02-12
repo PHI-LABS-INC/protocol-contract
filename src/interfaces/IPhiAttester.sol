@@ -34,7 +34,6 @@ interface IPhiAttester {
         bytes32 indexed attestationUID,
         bytes32 schemaId,
         string boardId,
-        string category,
         string uri,
         uint64 attestationExpirationTime
     );
