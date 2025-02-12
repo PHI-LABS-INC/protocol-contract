@@ -20,7 +20,7 @@ interface IPhiAttester {
         uint256 expiresAt; // block.timestamp after which signature is invalid
         uint256 nonce; // user-specific nonce for replay
         bytes32 schemaId; // which EAS schema to use
-        uint256 boardId; // board ID
+        string boardId; // board ID
         string category; // e.g., "philand", "art", etc.
         string uri; // link to content (Arweave, IPFS, etc.)
         uint64 attestationExpirationTime; // EAS's expirationTime
