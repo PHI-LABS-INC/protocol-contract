@@ -78,7 +78,7 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
         treasuryAddress.safeTransferETH(msg.value);
         if (req.schemaId == 0) revert SchemaNotProvided();
 
-        bytes memory data = abi.encode(req.category, req.uri);
+        bytes memory data = abi.encode(req.boardId, req.category, req.uri);
         IEAS.AttestationRequest memory ar = IEAS.AttestationRequest({
             schema: req.schemaId,
             data: IEAS.AttestationRequestData({
