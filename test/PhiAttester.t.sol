@@ -52,6 +52,7 @@ contract TestPhiAttester is Test {
                 request.expiresAt,
                 request.nonce,
                 request.schemaId,
+                request.boardId,
                 request.category,
                 request.uri,
                 request.attestationExpirationTime,
@@ -81,7 +82,8 @@ contract TestPhiAttester is Test {
         IPhiAttester.AttestBoardRequest memory request = IPhiAttester.AttestBoardRequest({
             expiresAt: block.timestamp + 1000,
             nonce: 0,
-            schemaId: bytes32("1"), // Cast to bytes32
+            schemaId: bytes32("1"), // Cast to bytes32,
+            boardId: 0, // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
             attestationExpirationTime: uint64(block.timestamp + 10_000) // Cast to uint64
@@ -107,6 +109,7 @@ contract TestPhiAttester is Test {
             expiresAt: block.timestamp + 1000,
             nonce: 0,
             schemaId: bytes32("1"),
+            boardId: 0, // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
             attestationExpirationTime: uint64(block.timestamp + 10_000)
@@ -126,6 +129,7 @@ contract TestPhiAttester is Test {
             expiresAt: block.timestamp + 1000,
             nonce: 0,
             schemaId: bytes32("1"),
+            boardId: 0, // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
             attestationExpirationTime: uint64(block.timestamp + 10_000)
@@ -144,6 +148,7 @@ contract TestPhiAttester is Test {
             expiresAt: block.timestamp - 1000, // Already expired
             nonce: 0,
             schemaId: bytes32("1"),
+            boardId: 0, // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
             attestationExpirationTime: uint64(block.timestamp + 10_000)
@@ -163,6 +168,7 @@ contract TestPhiAttester is Test {
             expiresAt: block.timestamp + 1000,
             nonce: 0,
             schemaId: bytes32(0), // 0 => invalid
+            boardId: 0, // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
             attestationExpirationTime: uint64(block.timestamp + 10_000)
@@ -181,6 +187,7 @@ contract TestPhiAttester is Test {
             expiresAt: block.timestamp + 1000,
             nonce: 0,
             schemaId: bytes32("1"), // このスキーマIDを使用
+            boardId: 0, // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
             attestationExpirationTime: uint64(block.timestamp + 10_000)

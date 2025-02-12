@@ -61,6 +61,7 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
                 req.expiresAt,
                 req.nonce,
                 req.schemaId,
+                req.boardId,
                 req.category,
                 req.uri,
                 req.attestationExpirationTime,
