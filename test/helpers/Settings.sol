@@ -6,13 +6,15 @@ import { PRBTest } from "@prb/test/src/PRBTest.sol";
 import { Test } from "forge-std/Test.sol";
 import { TestUtils } from "./TestUtils.sol";
 import { CuratorRewardsDistributor } from "../../src/reward/CuratorRewardsDistributor.sol";
-// import { PhiFactory } from "../../src/PhiFactory.sol";
-import { PhiFactoryZkSync } from "../../src/PhiFactoryZkSync.sol";
+import { PhiFactory } from "../../src/PhiFactory.sol";
+// import { PhiFactoryZkSync } from "../../src/PhiFactoryZkSync.sol";
 import { PhiRewards } from "../../src/reward/PhiRewards.sol";
+import { PhiAttester } from "../../src/PhiAttester.sol";
 import { BondingCurve } from "../../src/curve/BondingCurve.sol";
 import { ContributeRewards } from "../../src/lib/ContributeRewards.sol";
 import { Cred } from "../../src/Cred.sol";
 import { IPhiNFT1155 } from "../../src/interfaces/IPhiNFT1155.sol";
+import { MockEAS } from "./MockEAS.sol";
 import { PhiNFT1155 } from "../../src/art/PhiNFT1155.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { LibClone } from "solady/utils/LibClone.sol";
@@ -88,14 +90,12 @@ contract Settings is Test, TestUtils {
     address user1;
     address user2;
 
-    address scoreSignerAddress;
-
     uint256 internal constant ETH_SUPPLY = 120_200_000 ether;
 
-    // PhiFactory phiFactory;
-    PhiFactoryZkSync phiFactory;
+    PhiFactory phiFactory;
+    // PhiFactoryZkSync phiFactory;
     PhiRewards phiRewards;
-
+    PhiAttester phiAttester;
     BondingCurve bondingCurve;
     Cred cred;
     ContributeRewards contributeRewards;
@@ -134,12 +134,9 @@ contract Settings is Test, TestUtils {
         vm.deal(verifier, 1 ether);
 
         vm.startPrank(owner);
-        // address payable phiFactoryAddress =
-        //     payable(address(new PhiFactory()).cloneDeterministic(keccak256(abi.encodePacked(msg.sender, "SALT"))));
-        // phiFactory = PhiFactory(phiFactoryAddress);
         address payable phiFactoryAddress =
-            payable(address(new PhiFactoryZkSync()).cloneDeterministic(keccak256(abi.encodePacked(msg.sender, "SALT"))));
-        phiFactory = PhiFactoryZkSync(phiFactoryAddress);
+            payable(address(new PhiFactory()).cloneDeterministic(keccak256(abi.encodePacked(msg.sender, "SALT"))));
+        phiFactory = PhiFactory(phiFactoryAddress);
 
         // claimSignerPrivateKey = uint256(vm.envUint("TEST_CLAIM_SIGNER_PRIVATE_KEY"));
         claimSignerPrivateKey = 0x4af1bceebf7f3634ec3cff8a2c38e51178d5d4ce585c52d6043e5e2cc3418bb0;
@@ -186,6 +183,16 @@ contract Settings is Test, TestUtils {
 
         bondingCurve.setCredContract(address(cred));
         phiRewards.setPhiFactory(address(phiFactory));
+
+        phiAttester = new PhiAttester();
+        MockEAS mockEAS = new MockEAS();
+
+        phiAttester.initialize(
+            address(mockEAS), // Example address for EAS contract (replace with actual deployed EAS address)
+            protocolFeeDestination, // Treasury address
+            vm.addr(claimSignerPrivateKey), // Trusted signer address
+            owner // Owner address
+        );
         vm.stopPrank();
     }
 }
