@@ -40,6 +40,8 @@ interface IPhiAttester {
 
     event AttestationRevoked(bytes32 indexed attestationUID);
 
+    event AttestFeeUpdated(uint256 oldFee, uint256 newFee);
+
     /*//////////////////////////////////////////////////////////////
                                  FUNCTIONS
     //////////////////////////////////////////////////////////////*/
