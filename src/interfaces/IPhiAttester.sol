@@ -23,6 +23,7 @@ interface IPhiAttester {
         string boardId; // board ID
         string category; // e.g., "philand", "art", etc.
         string uri; // link to content (Arweave, IPFS, etc.)
+        address referrer; // address of the referrer
         uint64 attestationExpirationTime; // EAS's expirationTime
     }
 

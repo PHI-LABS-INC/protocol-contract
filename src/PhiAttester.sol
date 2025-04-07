@@ -12,7 +12,7 @@ import { IEAS } from "./interfaces/IEAS.sol";
 contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2StepUpgradeable {
     using SafeTransferLib for address;
 
-    uint256 public ATTEST_FEE = 0.0001 ether;
+    uint256 public attestFee = 0.0001 ether;
     IEAS public eas;
     address public treasuryAddress;
     address public trustedSigner;
@@ -56,17 +56,14 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
      * @param newFee The new fee amount in wei
      */
     function setAttestFee(uint256 newFee) external onlyOwner {
-        // Optional: Add validation if you want to enforce minimum/maximum fee
-        // if (newFee < MIN_FEE || newFee > MAX_FEE) revert InvalidFeeAmount();
-
-        uint256 oldFee = ATTEST_FEE;
-        ATTEST_FEE = newFee;
+        uint256 oldFee = attestFee;
+        attestFee = newFee;
 
         emit AttestFeeUpdated(oldFee, newFee);
     }
 
     function attestBoard(AttestBoardRequest calldata req, bytes calldata signature) external payable {
-        if (msg.value != ATTEST_FEE) revert InvalidFee();
+        if (msg.value != attestFee) revert InvalidFee();
         if (block.timestamp > req.expiresAt) revert SignatureExpired();
 
         bytes32 msgHash = keccak256(
@@ -79,6 +76,7 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
                 req.boardId,
                 req.category,
                 req.uri,
+                req.referrer,
                 req.attestationExpirationTime,
                 block.chainid
             )
@@ -93,7 +91,7 @@ contract PhiAttester is IPhiAttester, Initializable, UUPSUpgradeable, Ownable2St
         treasuryAddress.safeTransferETH(msg.value);
         if (req.schemaId == 0) revert SchemaNotProvided();
 
-        bytes memory data = abi.encode(req.boardId, req.category, req.uri);
+        bytes memory data = abi.encode(req.boardId, req.category, req.uri, req.referrer);
         IEAS.AttestationRequest memory ar = IEAS.AttestationRequest({
             schema: req.schemaId,
             data: IEAS.AttestationRequestData({
