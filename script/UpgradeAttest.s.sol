@@ -18,7 +18,8 @@ contract UpgradeAttest is BaseScript {
 
     function upgradePhiAttest(address proxyAddress, address newAttest) public returns (address) {
         PhiAttesterV2 attestProxy = PhiAttesterV2(payable(proxyAddress));
-
+        bytes memory data = "";
+        attestProxy.upgradeToAndCall(newAttest, data);
         return address(attestProxy);
     }
 }
