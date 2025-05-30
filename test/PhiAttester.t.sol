@@ -30,9 +30,6 @@ contract TestPhiAttester is Test {
         // Deploy the MockEAS contract
         mockEAS = new MockEAS();
 
-        // (Optional) If initialize() requires msg.sender == owner, use vm.prank:
-        // vm.prank(owner);
-
         // Initialize PhiAttester with MockEAS address and other parameters
         phiAttester = new PhiAttester();
         phiAttester.initialize(
@@ -86,6 +83,7 @@ contract TestPhiAttester is Test {
             boardId: "1", // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
+            referrer: address(0),
             attestationExpirationTime: uint64(block.timestamp + 10_000) // Cast to uint64
          });
 
@@ -112,6 +110,7 @@ contract TestPhiAttester is Test {
             boardId: "1", // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
+            referrer: address(0), // Set to zero address for testing
             attestationExpirationTime: uint64(block.timestamp + 10_000)
         });
 
@@ -132,6 +131,7 @@ contract TestPhiAttester is Test {
             boardId: "1", // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
+            referrer: address(0),
             attestationExpirationTime: uint64(block.timestamp + 10_000)
         });
 
@@ -151,6 +151,7 @@ contract TestPhiAttester is Test {
             boardId: "1", // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
+            referrer: address(0),
             attestationExpirationTime: uint64(block.timestamp + 10_000)
         });
 
@@ -171,6 +172,7 @@ contract TestPhiAttester is Test {
             boardId: "1", // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
+            referrer: address(0),
             attestationExpirationTime: uint64(block.timestamp + 10_000)
         });
 
@@ -190,6 +192,7 @@ contract TestPhiAttester is Test {
             boardId: "1", // Cast to uint256
             category: "art",
             uri: "ipfs://exampleuri",
+            referrer: address(0),
             attestationExpirationTime: uint64(block.timestamp + 10_000)
         });
         bytes memory signature = getSignature(request);

@@ -20,19 +20,18 @@ contract MockEAS is IEAS {
 
     function revoke(RevocationRequest calldata request) external payable override {
         emit Revoked(
-            address(0), // recipientは元の証明書から取得する必要があるが、mockなので0アドレスを使用
+            address(0),
             msg.sender,
-            request.data.uid, // structの構造に合わせて変更
+            request.data.uid,
             request.schema
         );
     }
 
-    // テスト用のヘルパー関数
+
     function getLatestAttestationUID() external view returns (bytes32) {
         return lastAttestationUID;
     }
 
-    // ISemverインターフェースの実装
     function version() external pure returns (string memory) {
         return "1.0.0";
     }

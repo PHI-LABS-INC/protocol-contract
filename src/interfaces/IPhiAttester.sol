@@ -12,6 +12,7 @@ interface IPhiAttester {
     error InvalidNonce();
     error SchemaNotProvided();
     error NullAddress();
+    error BoardLocked();
 
     /*//////////////////////////////////////////////////////////////
                                  STRUCTS
@@ -27,6 +28,34 @@ interface IPhiAttester {
         uint64 attestationExpirationTime; // EAS's expirationTime
     }
 
+    struct BoardInfo {
+        string title;
+        string imageURI;
+        string uri;
+        bool verified;
+        bool locked;
+        address creator;
+    }
+
+    struct BoardMetadata {
+        string title;
+        string imageURI;
+        bool verified;
+        bool locked;
+    }
+
+    struct AttestBoardRequestV2 {
+        uint256 expiresAt;
+        uint256 nonce;
+        bytes32 schemaId;
+        string boardId;
+        string category;
+        string uri;
+        address referrer;
+        uint64 attestationExpirationTime;
+        BoardMetadata metadata;
+    }
+
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
@@ -37,6 +66,17 @@ interface IPhiAttester {
         string boardId,
         string uri,
         uint64 attestationExpirationTime
+    );
+
+    event BoardAttestedV2(
+        address indexed attester,
+        bytes32 indexed uid,
+        bytes32 indexed schemaId,
+        string boardId,
+        string uri,
+        uint64 attestationExpirationTime,
+        bool verified,
+        bool locked
     );
 
     event AttestationRevoked(bytes32 indexed attestationUID);
